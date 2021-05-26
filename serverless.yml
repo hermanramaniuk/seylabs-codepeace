@@ -1,0 +1,66 @@
+service: seylabs-webapp-api
+
+# Create an optimized package for our functions
+package:
+  individually: true
+
+plugins:
+  - serverless-bundle # Package our functions with Webpack
+  - serverless-offline
+  - serverless-dotenv-plugin # Load .env as environment variables
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: prod
+  region: eu-central-1
+
+  # These environment variables are made available to our functions
+  # under process.env.
+  environment:
+    tableTests: Tests
+
+  # 'iamRoleStatements' defines the permission policy for the Lambda function.
+  # In this case Lambda functions are granted with permissions to access DynamoDB.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: "arn:aws:dynamodb:eu-central-1:*:*"
+
+functions:
+  test:
+    # Defines an HTTP API endpoint that calls the main function in test.js
+    # - path: url path is /test
+    # - method: GET request
+    handler: test.main
+    events:
+      - http:
+          path: test
+          method: get
+          authorizer:
+            arn: arn:aws:cognito-idp:eu-central-1:960158370526:userpool/eu-central-1_MEjg1vRT0
+  tests_create:
+    # Defines an HTTP API endpoint that calls the main function in test.js
+    # - path: url path is /tests
+    # - method: POST request
+    handler: tests.create
+    events:
+      - http:
+          path: tests
+          method: post
+  tests_list:
+    # Defines an HTTP API endpoint that calls the main function in test.js
+    # - path: url path is /tests
+    # - method: POST request
+    handler: tests.list
+    events:
+      - http:
+          path: tests
+          method: get
