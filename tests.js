@@ -36,17 +36,18 @@ export const list = handler(async (event, context) => {
     const params = {
         TableName: process.env.tableTests
     };
-    const result = await dynamoDb.scan(params);
-    if (!result.Items) {
+    const data = await dynamoDb.scan(params);
+    if (!data.Items) {
         throw new Error("Item not found.");
     }
-    return {
-        statusCode: 500,
+
+    let res =  {
+        statusCode: 200,
         headers: {
-            "Access-Control-Allow-Headers" : "Content-Type",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*' // replace with hostname of frontend (CloudFront)
         },
-        body: result.Items
+        body: JSON.stringify(data)
     };
+    return res;
 });

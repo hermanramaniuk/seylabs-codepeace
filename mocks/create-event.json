@@ -1,3 +1,3 @@
 {
-    "body": "{\"type\":\"test\",\"name\":\"FGV\",\"sample_type\":\"sample\",\"result_type\":\"result\",\"duration\":\"10s\"}"
+    "body": "{\"type\":\"test\",\"name\":\"STD\",\"sample_type\":\"sample\",\"result_type\":\"result\",\"duration\":\"10s\"}"
 }
